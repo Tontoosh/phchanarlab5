@@ -1,0 +1,958 @@
+{
+  "info": {
+    "name": "Лаборатори №5 — Бүртгэлийн API: TC01–TC10",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "README-ийн TC01–TC10 спецификаци. Тест бүр тусдаа хавтастай: өөрийн setup PUT хүсэлтүүд → POST /registrations → oracle. Runner-оор хавтсыг бүхэлд нь ажиллуулна. Байхгүй ID-г үүсгэхгүй. registrationID-г зөвхөн тоо эсэхээр шалгана."
+  },
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "TC01 — Идэвхтэй оюутан бүх урьдач нөхцөлийг хангасан үед OK",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC01",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC01",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"active\", \"coursesTaken\": [\"CS201\", \"CS202\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup PUT /courses/CS301",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/courses/CS301",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prerequisites\": [\"CS201\", \"CS202\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC01 — Идэвхтэй оюутан бүх урьдач нөхцөлийг хангасан үед OK",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC01\", \"courseID\": \"CS301\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = OK\", () => pm.expect(body.result).to.equal(\"OK\"));",
+                  "pm.test(\"registrationID нь тоо\", () => pm.expect(body.registrationID).to.be.a(\"number\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC02 — Оюутан байхгүй үед ERROR_NO_STUDENT",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /courses/CS302",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/courses/CS302",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prerequisites\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC02 — Оюутан байхгүй үед ERROR_NO_STUDENT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC02_MISSING\", \"courseID\": \"CS302\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_NO_STUDENT\", () => pm.expect(body.result).to.equal(\"ERROR_NO_STUDENT\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC03 — Идэвхгүй оюутан бүртгүүлэхэд ERROR_INACTIVE_STUDENT",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC03",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC03",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"inactive\", \"coursesTaken\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup PUT /courses/CS303",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/courses/CS303",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prerequisites\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC03 — Идэвхгүй оюутан бүртгүүлэхэд ERROR_INACTIVE_STUDENT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC03\", \"courseID\": \"CS303\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_INACTIVE_STUDENT\", () => pm.expect(body.result).to.equal(\"ERROR_INACTIVE_STUDENT\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC04 — Хичээл байхгүй үед ERROR_NO_COURSE",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC04",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC04",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"active\", \"coursesTaken\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC04 — Хичээл байхгүй үед ERROR_NO_COURSE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC04\", \"courseID\": \"CS304\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_NO_COURSE\", () => pm.expect(body.result).to.equal(\"ERROR_NO_COURSE\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC05 — Урьдач хичээлүүдийг огт үзээгүй үед ERROR_PREREQUISITES",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC05",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC05",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"active\", \"coursesTaken\": []}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup PUT /courses/CS305",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/courses/CS305",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prerequisites\": [\"CS201\", \"CS202\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC05 — Урьдач хичээлүүдийг огт үзээгүй үед ERROR_PREREQUISITES",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC05\", \"courseID\": \"CS305\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_PREREQUISITES\", () => pm.expect(body.result).to.equal(\"ERROR_PREREQUISITES\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));",
+                  "pm.test(\"missing массив зөв\", () => pm.expect(body.missing).to.eql([\"CS201\", \"CS202\"]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC06 — Урьдач хичээлүүдийн заримыг үзсэн үед ERROR_PREREQUISITES",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC06",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC06",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"active\", \"coursesTaken\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup PUT /courses/CS306",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/courses/CS306",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prerequisites\": [\"CS201\", \"CS202\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC06 — Урьдач хичээлүүдийн заримыг үзсэн үед ERROR_PREREQUISITES",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC06\", \"courseID\": \"CS306\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_PREREQUISITES\", () => pm.expect(body.result).to.equal(\"ERROR_PREREQUISITES\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));",
+                  "pm.test(\"missing массив зөв\", () => pm.expect(body.missing).to.eql([\"CS202\"]));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC07 — Оюутан болон хичээл хоёулаа байхгүй үед ERROR_NO_STUDENT",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "TC07 — Оюутан болон хичээл хоёулаа байхгүй үед ERROR_NO_STUDENT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC07_MISSING\", \"courseID\": \"CS307\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_NO_STUDENT\", () => pm.expect(body.result).to.equal(\"ERROR_NO_STUDENT\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC08 — Идэвхгүй оюутан, байхгүй хичээлтэй үед ERROR_INACTIVE_STUDENT",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC08",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC08",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"inactive\", \"coursesTaken\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC08 — Идэвхгүй оюутан, байхгүй хичээлтэй үед ERROR_INACTIVE_STUDENT",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC08\", \"courseID\": \"CS308\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_INACTIVE_STUDENT\", () => pm.expect(body.result).to.equal(\"ERROR_INACTIVE_STUDENT\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC09 — Урьдач нөхцөлгүй хичээлд бүртгүүлэхэд OK",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC09",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC09",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"active\", \"coursesTaken\": []}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup PUT /courses/CS309",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/courses/CS309",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prerequisites\": []}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC09 — Урьдач нөхцөлгүй хичээлд бүртгүүлэхэд OK",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC09\", \"courseID\": \"CS309\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = OK\", () => pm.expect(body.result).to.equal(\"OK\"));",
+                  "pm.test(\"registrationID нь тоо\", () => pm.expect(body.registrationID).to.be.a(\"number\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TC10 — courseID талбар дутуу үед ERROR_BAD_REQUEST",
+      "description": "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй.",
+      "item": [
+        {
+          "name": "Setup PUT /students/S_TC10",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/students/S_TC10",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"active\", \"coursesTaken\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup PUT /courses/CS310",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/courses/CS310",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prerequisites\": [\"CS201\"]}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Setup: HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Setup: result = OK\", () => pm.expect(pm.response.json()).to.eql({ result: \"OK\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC10 — courseID талбар дутуу үед ERROR_BAD_REQUEST",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseURL}}/registrations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"studentID\": \"S_TC10\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP статус 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"JSON Content-Type\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"result = ERROR_BAD_REQUEST\", () => pm.expect(body.result).to.equal(\"ERROR_BAD_REQUEST\"));",
+                  "pm.test(\"Алдаанд registrationID үүсэхгүй\", () => pm.expect(body).not.to.have.property(\"registrationID\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

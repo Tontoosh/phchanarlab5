@@ -1,7 +1,7 @@
 $kind: http-request
 name: "{{baseURL}}/courses/CS313"
 description: ""
-url: "{{baseURL}}/courses/CS313"
+url: ""
 method: PUT
 body:
   type: json

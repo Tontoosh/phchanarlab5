@@ -1,0 +1,5 @@
+$kind: collection
+name: "Лаборатори 5 — Бүртгэлийн API: TC01–TC10"
+description: " "
+variables:
+  baseURL: http://localhost:3000

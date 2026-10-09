@@ -1,0 +1,4 @@
+$kind: collection
+name: TC10 — courseID талбар дутуу үед ERROR_BAD_REQUEST
+description: "Бие даасан тест: энэ хавтас дахь setup PUT хүсэлтүүдийг эхэлж, дараа нь POST хүсэлтийг ажиллуулна. Байхгүй гэж заасан ID-г үүсгэхгүй."
+order: 10000

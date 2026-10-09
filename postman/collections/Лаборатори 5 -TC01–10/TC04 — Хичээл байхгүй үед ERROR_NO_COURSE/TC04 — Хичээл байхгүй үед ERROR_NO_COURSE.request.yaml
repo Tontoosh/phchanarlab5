@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseURL}}/registrations"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"studentID": "S_TC04", "courseID": "CS304"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP статус 200", () => pm.response.to.have.status(200));
+      pm.test("JSON Content-Type", () => pm.expect(pm.response.headers.get("Content-Type")).to.include("application/json"));
+      const body = pm.response.json();
+      pm.test("result = ERROR_NO_COURSE", () => pm.expect(body.result).to.equal("ERROR_NO_COURSE"));
+      pm.test("Алдаанд registrationID үүсэхгүй", () => pm.expect(body).not.to.have.property("registrationID"));
+    language: text/javascript
+order: 2000
