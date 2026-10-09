@@ -80,3 +80,38 @@ postman collection run lab05-collection.json --iteration-count 2 --no-report-eve
 ```
 
 Баталгаажуулалт: collection-ийг хоёр давтахад 144 assertion амжилттай, алдаа 0. Тестийн хавтаснуудыг урвуу дарааллаар хоёр давтахад мөн 144 assertion амжилттай, алдаа 0.
+
+
+## Даалгавар 4: Newman PASS / FAIL / DOWN нотолгоо
+
+Нэг бүтэн ажиллуулалтын тестийн тоо нь **72 assertion** (Newman-ийн `assertions executed`); TC01–TC10 нь 10 тестийн спецификаци бөгөөд setup-тай нийлээд 25 хүсэлт илгээнэ. Өмнөх хоёр давталтын 144 assertion нь 72 × 2 юм.
+
+| Ажиллуулалт | iterations executed / failed | requests executed / failed | assertions executed / failed | Newman exit code | Текст нотолгоо |
+|---|---|---|---|---|---|
+| PASS | 1 / 0 | 25 / 0 | 72 / 0 | 0 | [newman-pass.txt](results/newman-pass.txt) |
+| FAIL | 1 / 0 | 25 / 0 | 72 / 1 | 1 | [newman-fail.txt](results/newman-fail.txt) |
+| DOWN | 1 / 0 | 25 / 25 | 50 / 50 | 1 | [newman-down.txt](results/newman-down.txt) |
+
+FAIL-ийн тусдаа [lab05-collection-fail.json](lab05-collection-fail.json) файлд TC01-ийн HTTP oracle-ийг зориуд 201-ээс 200 болгосон: сервер 201 буцаахад `expected response to have status code 200 but got 201` гэж нэг assertion унана. Үндсэн `lab05-collection.json` зөв хэвээр байна. CI quality gate нь Newman-ийн exit code 0 үед амжилттай, 1 үед бүтэлгүй гэж үзнэ.
+
+DOWN-д серверийг SIGINT (Ctrl+C-тэй адил)-ээр зогсоож үндсэн collection-ийг ажиллуулсан; `ECONNREFUSED 127.0.0.1:3000` нь сервертэй холбогдож чадаагүй интерфейсийн алдаа бөгөөд FAIL-ийн зориуд буруу хүлээлттэй oracle-ийн алдаанаас ялгаатай. Хариу ирээгүйгээс JSON унших script-үүд тасалдсан тул DOWN-ийн `assertions executed` 50 байна.
+
+Дахин ажиллуулах (zsh): эхлээд тусдаа терминалд `node server.js` ажиллуулна.
+
+```zsh
+mkdir -p results
+newman run lab05-collection.json 2>&1 | tee results/newman-pass.txt
+run_exit=${pipestatus[1]}
+print -r -- "exit=$run_exit" | tee -a results/newman-pass.txt
+
+newman run lab05-collection-fail.json 2>&1 | tee results/newman-fail.txt
+run_exit=${pipestatus[1]}
+print -r -- "exit=$run_exit" | tee -a results/newman-fail.txt
+
+# Серверийн терминалд Ctrl+C дарсны дараа:
+newman run lab05-collection.json 2>&1 | tee results/newman-down.txt
+run_exit=${pipestatus[1]}
+print -r -- "exit=$run_exit" | tee -a results/newman-down.txt
+```
+
+`pipestatus[1]`-ийг pipeline-ийн дараа шууд хадгална; `$?` нь `tee`-ийн exit code тул Newman-ийн үр дүнг илэрхийлэхгүй. Bash-д `run_exit=${PIPESTATUS[0]}` хэрэглэнэ. Нотолгоо нь `results/` доторх текст файлууд юм. DOWN-ийн дараа сервер унтарсан хэвээр байна; дахин ашиглахдаа `node server.js` ажиллуулна.

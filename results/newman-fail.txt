@@ -1,4 +1,4 @@
-(node:99861) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(node:104603) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
 (Use `node --trace-deprecation ...` to show where the warning was created)
 newman
 
@@ -11,12 +11,12 @@ newman
   ✓  Setup: result = OK
 
 ↳ Setup PUT /courses/CS301
-  PUT http://localhost:3000/courses/CS301 [200 OK, 178B, 2ms]
+  PUT http://localhost:3000/courses/CS301 [200 OK, 178B, 1ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
 ↳ TC01 — Идэвхтэй оюутан бүх урьдач нөхцөлийг хангасан үед OK
-  POST http://localhost:3000/registrations [201 Created, 203B, 1ms]
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
   1. HTTP статус 200 (зориуд буруу oracle)
   ✓  JSON Content-Type
   ✓  result = OK
@@ -29,7 +29,7 @@ newman
   ✓  Setup: result = OK
 
 ↳ TC02 — Оюутан байхгүй үед ERROR_NO_STUDENT
-  POST http://localhost:3000/registrations [200 OK, 192B, 1ms]
+  POST http://localhost:3000/registrations [200 OK, 192B, 2ms]
   ✓  HTTP статус 200
   ✓  JSON Content-Type
   ✓  result = ERROR_NO_STUDENT
@@ -42,7 +42,7 @@ newman
   ✓  Setup: result = OK
 
 ↳ Setup PUT /courses/CS303
-  PUT http://localhost:3000/courses/CS303 [200 OK, 178B, 1ms]
+  PUT http://localhost:3000/courses/CS303 [200 OK, 178B, 2ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
@@ -55,7 +55,7 @@ newman
 
 ❏ TC04 — Хичээл байхгүй үед ERROR_NO_COURSE
 ↳ Setup PUT /students/S_TC04
-  PUT http://localhost:3000/students/S_TC04 [200 OK, 178B, 1ms]
+  PUT http://localhost:3000/students/S_TC04 [200 OK, 178B, 2ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
@@ -73,7 +73,7 @@ newman
   ✓  Setup: result = OK
 
 ↳ Setup PUT /courses/CS305
-  PUT http://localhost:3000/courses/CS305 [200 OK, 178B, 2ms]
+  PUT http://localhost:3000/courses/CS305 [200 OK, 178B, 1ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
@@ -87,17 +87,17 @@ newman
 
 ❏ TC06 — Урьдач хичээлүүдийн заримыг үзсэн үед ERROR_PREREQUISITES
 ↳ Setup PUT /students/S_TC06
-  PUT http://localhost:3000/students/S_TC06 [200 OK, 178B, 1ms]
+  PUT http://localhost:3000/students/S_TC06 [200 OK, 178B, 2ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
 ↳ Setup PUT /courses/CS306
-  PUT http://localhost:3000/courses/CS306 [200 OK, 178B, 1ms]
+  PUT http://localhost:3000/courses/CS306 [200 OK, 178B, 3ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
 ↳ TC06 — Урьдач хичээлүүдийн заримыг үзсэн үед ERROR_PREREQUISITES
-  POST http://localhost:3000/registrations [200 OK, 215B, 2ms]
+  POST http://localhost:3000/registrations [200 OK, 215B, 3ms]
   ✓  HTTP статус 200
   ✓  JSON Content-Type
   ✓  result = ERROR_PREREQUISITES
@@ -106,7 +106,7 @@ newman
 
 ❏ TC07 — Оюутан болон хичээл хоёулаа байхгүй үед ERROR_NO_STUDENT
 ↳ TC07 — Оюутан болон хичээл хоёулаа байхгүй үед ERROR_NO_STUDENT
-  POST http://localhost:3000/registrations [200 OK, 192B, 1ms]
+  POST http://localhost:3000/registrations [200 OK, 192B, 2ms]
   ✓  HTTP статус 200
   ✓  JSON Content-Type
   ✓  result = ERROR_NO_STUDENT
@@ -114,7 +114,7 @@ newman
 
 ❏ TC08 — Идэвхгүй оюутан, байхгүй хичээлтэй үед ERROR_INACTIVE_STUDENT
 ↳ Setup PUT /students/S_TC08
-  PUT http://localhost:3000/students/S_TC08 [200 OK, 178B, 1ms]
+  PUT http://localhost:3000/students/S_TC08 [200 OK, 178B, 3ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
@@ -127,17 +127,17 @@ newman
 
 ❏ TC09 — Урьдач нөхцөлгүй хичээлд бүртгүүлэхэд OK
 ↳ Setup PUT /students/S_TC09
-  PUT http://localhost:3000/students/S_TC09 [200 OK, 178B, 1ms]
+  PUT http://localhost:3000/students/S_TC09 [200 OK, 178B, 2ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
 ↳ Setup PUT /courses/CS309
-  PUT http://localhost:3000/courses/CS309 [200 OK, 178B, 4ms]
+  PUT http://localhost:3000/courses/CS309 [200 OK, 178B, 2ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
 ↳ TC09 — Урьдач нөхцөлгүй хичээлд бүртгүүлэхэд OK
-  POST http://localhost:3000/registrations [201 Created, 203B, 2ms]
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
   ✓  HTTP статус 201
   ✓  JSON Content-Type
   ✓  result = OK
@@ -150,12 +150,12 @@ newman
   ✓  Setup: result = OK
 
 ↳ Setup PUT /courses/CS310
-  PUT http://localhost:3000/courses/CS310 [200 OK, 178B, 3ms]
+  PUT http://localhost:3000/courses/CS310 [200 OK, 178B, 1ms]
   ✓  Setup: HTTP 200
   ✓  Setup: result = OK
 
 ↳ TC10 — courseID талбар дутуу үед ERROR_BAD_REQUEST
-  POST http://localhost:3000/registrations [400 Bad Request, 202B, 1ms]
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 2ms]
   ✓  HTTP статус 400
   ✓  JSON Content-Type
   ✓  result = ERROR_BAD_REQUEST
@@ -174,9 +174,9 @@ newman
 ├─────────────────────────┼─────────────────┼─────────────────┤
 │              assertions │              72 │               1 │
 ├─────────────────────────┴─────────────────┴─────────────────┤
-│ total run duration: 370ms                                   │
+│ total run duration: 384ms                                   │
 ├─────────────────────────────────────────────────────────────┤
-│ total data received: 593B (approx)                          │
+│ total data received: 591B (approx)                          │
 ├─────────────────────────────────────────────────────────────┤
 │ average response time: 2ms [min: 1ms, max: 17ms, s.d.: 3ms] │
 └─────────────────────────────────────────────────────────────┘
