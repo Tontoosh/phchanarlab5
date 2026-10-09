@@ -1,5 +1,11 @@
 # Лаборатори №5: API систем тест — Postman ба Newman
 
+- Оюутны нэр: **[өөрийн нэрийг бөглөх]**
+- Оюутны код: **[өөрийн кодыг бөглөх]**
+- `node -v`: `v24.15.0`
+- `newman -v`: `6.2.2`
+- Public репозитор: [Tontoosh/phchanarlab5](https://github.com/Tontoosh/phchanarlab5)
+
 ## Даалгавар 2: Тест дизайн — сонголт ба утгын хүснэгт
 
 ### Тестлэх функц
@@ -115,3 +121,38 @@ print -r -- "exit=$run_exit" | tee -a results/newman-down.txt
 ```
 
 `pipestatus[1]`-ийг pipeline-ийн дараа шууд хадгална; `$?` нь `tee`-ийн exit code тул Newman-ийн үр дүнг илэрхийлэхгүй. Bash-д `run_exit=${PIPESTATUS[0]}` хэрэглэнэ. Нотолгоо нь `results/` доторх текст файлууд юм. DOWN-ийн дараа сервер унтарсан хэвээр байна; дахин ашиглахдаа `node server.js` ажиллуулна.
+
+
+## Даалгавар 5: Нийтийн API
+
+Тусдаа [lab05-public-collection.json](lab05-public-collection.json) collection нь `GET https://jsonplaceholder.typicode.com/users` хүсэлтэд дараах 3 oracle шалгана.
+
+| Oracle | Хүлээгдэх утга |
+|---|---|
+| HTTP статус | `200` |
+| JSON хариуны төрөл | Массив |
+| Эхний хэрэглэгчийн `name` | `Leanne Graham` |
+
+Эхний хэрэглэгчийн нэрийг [API-ийн бодит хариунаас](https://jsonplaceholder.typicode.com/users) шалгаж сонгосон. GET-only тул setup хэрэггүй; өөрийн API-тай харьцуулахад өгөгдөл бэлтгэхгүй нь хялбар боловч интернэт болон гаднын серверийн хүртээмжээс хамаарах нь хэцүү байв.
+
+```zsh
+newman run lab05-public-collection.json 2>&1 | tee results/newman-public.txt
+run_exit=${pipestatus[1]}
+print -r -- "exit=$run_exit" | tee -a results/newman-public.txt
+```
+
+Нотолгоо: [results/newman-public.txt](results/newman-public.txt) — 1 iteration, 1 request, **3 assertions executed, 0 failed, exit=0**. Нийтийн API-ийн 3 assertion нь тусдаа collection-ийн тоо бөгөөд үндсэн `results/newman-pass.txt`-ийн **72 assertion**-д нэмэгдэхгүй.
+
+## Дүгнэлт
+
+Энэ лабораторид хичээлд бүртгүүлэх API-г эквивалент ангиар задлан 10 тестийн спецификаци боловсруулсан.
+Сонголт ба төлөөлөх утгын хүснэгт нь идэвхтэй, идэвхгүй, байхгүй оюутан болон урьдач нөхцөлийн ялгааг хамрахад тусалсан.
+Тест бүр тусдаа ID болон шаардлагатай setup хүсэлтүүдтэй тул өөр тестийн өгөгдөл бэлтгэлээс хамаарахгүй.
+HTTP статусын хамт JSON дахь result болон шаардлагатай нэмэлт талбаруудыг шалгаснаар зөвхөн статус шалгахын хязгаарлалтыг багасгасан.
+Үндсэн collection-ийн 25 хүсэлт, 72 assertion бүгд амжилттай ажиллаж Newman exit code 0 гарсан.
+registrationID-ийн яг утгыг бус тоо эсэхийг шалгасан нь бүртгэлийн дугаар өсөхөд тестийг давтан ажиллуулах боломж олгосон.
+Тусдаа FAIL collection-ийн нэг oracle-ийг зориуд буруу болгоход нэг assertion унаж exit code 1 болсон нь CI quality gate алдааг илрүүлэхийг харуулсан.
+Серверийг унтраахад ECONNREFUSED гарсан нь холболтын интерфейсийн алдаа ба хүлээлтийн oracle-ийн алдааг ялгаж ойлгох боломж өгсөн.
+Нийтийн GET API дээр setup шаардахгүй гурван oracle амжилттай ажилласан боловч сүлжээний хамааралтайг туршилтаар харсан.
+Newman-ийн текст тайлан, бодит assertion тоо, pipeline-аас зөв авсан exit code нь тестийн үр дүнг шалгах нотолгоо болсон.
+

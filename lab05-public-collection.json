@@ -1,0 +1,28 @@
+{
+  "info": {
+    "name": "Лаборатори №5 — Нийтийн API GET /users",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /users — статус, массив, эхний нэр",
+      "request": {
+        "method": "GET",
+        "url": "https://jsonplaceholder.typicode.com/users"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP статус 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Хариу массив байна\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));",
+              "pm.test(\"Эхний хэрэглэгчийн нэр Leanne Graham\", () => pm.expect(pm.response.json()[0].name).to.eql(\"Leanne Graham\"));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

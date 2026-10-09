@@ -187,3 +187,4 @@ newman
                      expected response to have status code 200 but got 201                                                                              
                      at assertion:0 in test-script                                                                                                      
                      inside "TC01 — Идэвхтэй оюутан бүх урьдач нөхцөлийг хангасан үед OK / TC01 — Идэвхтэй оюутан бүх урьдач нөхцөлийг хангасан үед OK" 
+exit=1
